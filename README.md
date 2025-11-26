@@ -1,2 +1,3 @@
-# fuv-math
-Undergraduate FUV Math
+# Research seminar - undergrad FUV
+
+Smoluchowski–Kramers Approximation

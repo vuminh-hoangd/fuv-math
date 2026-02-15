@@ -21,7 +21,7 @@ $$
 
 Under **Lipschitz continuity** and **uniform boundedness** assumptions on $b$ and $\sigma$, we have the following Convergence Result (Conjecture 3.1, Part iii)
 
-For any $\epsilon > 0$ and $T > 0$, there exists a constant $c_2 = c_2(K, n) > 0$ such that:
+For any $\epsilon > 0$ and $T > 0$, there exists a constant $C > 0$ such that:
 
 $$
 \mathbb{P}\left( \max_{0 \leq t \leq T} |q_t^\mu - q_t| > \epsilon \right) =

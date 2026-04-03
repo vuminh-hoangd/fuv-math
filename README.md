@@ -6,11 +6,11 @@ A proof of the Smoluchowski–Kramers Approximation
 
 Consider the second-order stochastic differential equation arising from Newton's second law:
 
-$$
+$
 \mu \ddot{q}_t^\mu = b(t, q_t^\mu) + \sigma(t, q_t^\mu)\dot{W}_t - \dot{q}_t^\mu,
 \quad q_0^\mu = q,\quad \dot{q}_0^\mu = p,
 \tag{1}
-$$
+$
 
 and the associated first-order Itô stochastic differential equation:
 

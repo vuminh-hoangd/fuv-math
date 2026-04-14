@@ -21,11 +21,11 @@ $$
 
 Under **Lipschitz continuity** and **uniform boundedness** assumptions on $b$ and $\sigma$, we have the following Convergence Result (Conjecture 3.1, Part iii)
 
-For any $\epsilon > 0$ and $T > 0$, there exists a constant $C > 0$ such that:
+On each finite time interval $[0,T]$, for any $\epsilon>0$, and any initial conditions $p,q \in \R^n $, one has:
 
 $$
 \mathbb{P}\left( \max_{0 \leq t \leq T} |q_t^\mu - q_t| > \epsilon \right) =
-O(\mu) \xrightarrow{\mu \to 0} 0
+O\left( \mu \log(1/\mu)   \right) \xrightarrow{\mu \to 0} 0
 $$
 
 ---

@@ -19,7 +19,7 @@ dq_t = b(t, q_t) \, dt + \sigma(t, q_t) \, dW_t, \quad q_0 = q.
 \tag{2}
 $$
 
-Under **Lipschitz continuity** and **uniform boundedness** assumptions on $b$ and $\sigma$, we have the following Convergence Result (Conjecture 3.1, Part iii)
+Under **Lipschitz continuity** and **uniform boundedness** assumptions on $b$ and $\sigma$, we have the following Convergence Result 
 
 On each finite time interval $[0,T]$, for any $\epsilon>0$, and any initial conditions $p,q \in \mathbb{R}^n $, one has:
 

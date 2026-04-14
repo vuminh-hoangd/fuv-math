@@ -15,7 +15,7 @@ $$
 and the associated first-order Itô stochastic differential equation:
 
 $$
-dq_t = b(t, q_t) \, dt + \sigma(t, q_t) \, dW_t, \quad q_0 = q.
+dq_t = b(t, q_t) dt + \sigma(t, q_t) dW_t, \quad q_0 = q.
 \tag{2}
 $$
 

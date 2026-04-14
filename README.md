@@ -21,7 +21,7 @@ $$
 
 Under **Lipschitz continuity** and **uniform boundedness** assumptions on $b$ and $\sigma$, we have the following Convergence Result (Conjecture 3.1, Part iii)
 
-On each finite time interval $[0,T]$, for any $\epsilon>0$, and any initial conditions $p,q \in \R^n $, one has:
+On each finite time interval $[0,T]$, for any $\epsilon>0$, and any initial conditions $p,q \in \mathbb{R}^n $, one has:
 
 $$
 \mathbb{P}\left( \max_{0 \leq t \leq T} |q_t^\mu - q_t| > \epsilon \right) =

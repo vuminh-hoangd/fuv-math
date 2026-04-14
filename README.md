@@ -4,7 +4,7 @@ A proof of the Smoluchowski–Kramers Approximation
 
 ## Convergence of Second-Order to First-Order Stochastic Dynamics
 
-Consider the second-order stochastic differential equation arising from Newton's second law ($$ \text{F} = \mu a $$):
+Consider the second-order stochastic differential equation arising from Newton's second law:
 
 $$
 \mu \ddot{q}_t^\mu = b(t, q_t^\mu) + \sigma(t, q_t^\mu)\dot{W}_t - \dot{q}_t^\mu,

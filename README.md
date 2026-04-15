@@ -1,6 +1,6 @@
 # Research seminar - undergrad FUV
 
-A proof of the Smoluchowski–Kramers Approximation
+A revised proof of the Smoluchowski–Kramers Approximation
 
 ## Convergence of Second-Order to First-Order Stochastic Dynamics
 

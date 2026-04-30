@@ -153,7 +153,7 @@ kw_data = dict(marker='o', linewidth=2.0, markersize=7,
 kw_ref  = dict(linestyle='--', linewidth=2.0, color=COLORS[1], alpha=0.85, zorder=4)
 kw_ref2 = dict(linestyle=':',  linewidth=2.0, color=COLORS[2], alpha=0.85, zorder=3)
 
-# ─── (i)max |et| = O(u)
+#  (i) max |et| = O(u)
 ax = fig.add_subplot(gs[0, 0])
 ax.loglog(mu_vals, det_max, **kw_data)
 ref1, _ = best_fit_line(mu_fine, 1.0,
@@ -166,7 +166,7 @@ ax.set_title('(i) Deterministic ($\\sigma=0$)\n'
              '$\\max_{{[0,T]}}|e_t| = O(\\mu)$', fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (ii) max_t E[|et|] = O(sqrt{u})
+# (ii) max_t E[|et|] = O(sqrt{u})
 ax = fig.add_subplot(gs[0, 1])
 ax.loglog(mu_vals, sto_maxEmn, **kw_data)
 ax.loglog(mu_fine, C_ii * np.sqrt(mu_fine), **kw_ref,
@@ -178,7 +178,7 @@ ax.set_title('(ii) Stochastic (pointwise)\n'
              fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (iii) E[max_t |et|^2] = O(u log(1/u))
+# (iii) E[max_t |et|^2] = O(u log(1/u))
 ax = fig.add_subplot(gs[0, 2])
 ax.loglog(mu_vals, sto_EmaxSq, **kw_data)
 ax.loglog(mu_fine, C_iii_log * mu_fine * np.log(1/mu_fine), **kw_ref,
@@ -192,7 +192,7 @@ ax.set_title('(iii) Uniform $L^2$\n'
              fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (iv) Markov probability bound
+# (iv) Markov probability bound
 ax = fig.add_subplot(gs[1, 0])
 markov_bnd = sto_EmaxSq / eps**2
 ax.loglog(mu_vals, sto_prob,   marker='o', linewidth=2, markersize=7,
@@ -207,7 +207,7 @@ ax.set_title(f'(iv) Markov Inequality Check ($\\varepsilon={eps}$)\n'
              fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (v) 𝔼[max_t |et|] = O( sqrt(u log(1/u)) 
+# (v) E[max_t |et|] = O( sqrt(u log(1/u)) 
 ax = fig.add_subplot(gs[1, 1])
 ax.loglog(mu_vals, sto_Emax, **kw_data)
 ax.loglog(mu_fine, C_v_log * np.sqrt(mu_fine * np.log(1/mu_fine)), **kw_ref,

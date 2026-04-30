@@ -1,6 +1,6 @@
 # Research seminar - undergrad FUV
 
-A revised proof of the Smoluchowski–Kramers Approximation with constant friction.
+A revised proof correction of the Smoluchowski–Kramers Approximation with constant friction.
 
 ## Convergence of Second-Order to First-Order Stochastic Dynamics
 

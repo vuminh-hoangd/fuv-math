@@ -4,82 +4,79 @@ import matplotlib.gridspec as gridspec
 from scipy.stats import linregress
 import time
 
-# ── Reproducibility
+# Reproducibility
 
 np.random.seed(2024)
 
-# ── Simulation parameters
+# Simulation parameters
 T   = 1           # time horizon
-dt  = 1e-5          # step size  (ensures dt/μ_min = 0.02 ≪ 2: always stable)
+dt  = 1e-5          # step size  
 N   = int(T / dt)   # steps
 Np  = 1500          # Monte Carlo paths
-eps = 0.5          # threshold ε for probability bound  
+eps = 0.5          # threshold for probability bound  
 q0  = 1.0           # initial position
 p0  = 0.5           # initial velocity 
 
-# μ grid 
+# u grid 
 mu_vals = np.array([ 0.6, 0.5, 0.4, 0.20, 0.12, 0.07, 0.04, 0.02, 0.01, 0.005
                     , 0.002, 0.001, 0.0005, 0.0002, 0.0001
                     ])
 
-# ── Coefficient functions (Lipschitz + bounded
+# ── Coefficient functions (Lipschitz + bounded)
 #   b(t,q) = sin(t) − tanh(q)    (Lipschitz constant K=1, bounded by 2)
-#   σ(t,q) = 0.5           (constant, satisfies all assumptions trivially)
+#   sigma (t,q) = 0.5           (constant, satisfies all assumptions trivially)
 def b_fn(t, q): return np.sin(t) - np.tanh(q)
 def sigma_fn(t, q): return 0.5 * np.ones(np.shape(q), dtype=float)
 
 t_grid = np.arange(N + 1) * dt
 
-# ── Pre-generate Brownian increments 
+# Pre-generate Brownian increments 
 print(f"Generating {Np}×{N} Brownian increments … ", end="", flush=True)
 dW_all = np.sqrt(dt) * np.random.randn(Np, N)
 print("done.\n")
 
-# ── Storage
-det_max     = np.zeros(len(mu_vals))   # (i)   max_t |eₜ|, σ=0
-sto_maxEmn  = np.zeros(len(mu_vals))   # (ii)  max_t 𝔼[|eₜ|]
-sto_EmaxSq  = np.zeros(len(mu_vals))   # (iii) 𝔼[max_t |eₜ|²]
-sto_prob    = np.zeros(len(mu_vals))   # (iv)  ℙ(max_t |eₜ| > ε)
-sto_Emax    = np.zeros(len(mu_vals))   # (v)   𝔼[max_t |eₜ|]
+# Storage
+det_max     = np.zeros(len(mu_vals))  
+sto_maxEmn  = np.zeros(len(mu_vals))  
+sto_EmaxSq  = np.zeros(len(mu_vals))  
+sto_prob    = np.zeros(len(mu_vals))   
+sto_Emax    = np.zeros(len(mu_vals))   
 
-# ── Main simulation loop
+# Main simulation loop
 for idx, mu in enumerate(mu_vals):
     t_start = time.time()
     print(f"  μ = {mu:.4f}", end="  |  ", flush=True)
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # (i) DETERMINISTIC  (σ = 0, single trajectory)
-    # Euler–Maruyama for both; no noise.
-    # ─────────────────────────────────────────────────────────────────────────
+    
+    # (i) DETERMINISTIC 
+    # Euler–Maruyama for both, no noise.
     qi = float(q0);  qm = float(q0);  vm = float(p0)
     det_e = 0.0
     for k in range(N):
         tk       = t_grid[k]
         bi_ito   = b_fn(tk, qi)
         bi_mu    = b_fn(tk, qm)
-        # Itô SDE (σ=0)
+        
         qi_new   = qi + bi_ito * dt
-        # Kramers (σ=0): q̈ step is split into (q,v) system
+
         qm_new   = qm + vm * dt
         vm_new   = vm + (bi_mu - vm) / mu * dt
         qi, qm, vm = qi_new, qm_new, vm_new
         det_e    = max(det_e, abs(qm - qi))
     det_max[idx] = det_e
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # (ii–v) STOCHASTIC  (σ ≠ 0, Monte Carlo over Np paths)
-    # All paths share the SAME Brownian increments dW_all.
-    # ─────────────────────────────────────────────────────────────────────────
+    # (ii–v) STOCHASTIC  (Monte Carlo over Np paths)
+    # All paths share the SAME Brownian increments.
+
     qi = np.full(Np, q0, dtype=float)
     qm = np.full(Np, q0, dtype=float)
     vm = np.full(Np, p0, dtype=float)
 
-    max_e_path = np.zeros(Np)    # running max_t |eₜ| per path
-    maxEmn_run = 0.0             # running max_t 𝔼[|eₜ|]
+    max_e_path = np.zeros(Np)   
+    maxEmn_run = 0.0            
 
     for k in range(N):
         tk   = t_grid[k]
-        dwk  = dW_all[:, k]      # shared ΔW across both processes
+        dwk  = dW_all[:, k]      
 
         # Coefficients evaluated at CURRENT state (standard Euler–Maruyama)
         bi_ito  = b_fn(tk, qi)
@@ -127,7 +124,7 @@ sl_ii,  C_ii,  r2_ii  = fit_slope(mu_vals, sto_maxEmn)
 sl_iii, C_iii, r2_iii = fit_slope(mu_vals, sto_EmaxSq)
 sl_v,   C_v,   r2_v   = fit_slope(mu_vals, sto_Emax)
 
-# For (iii) and (v): also fit against μ log(1/μ) and √(μ log(1/μ))
+# For (iii) and (v)
 ref_mulog  = mu_vals * np.log(1.0 / mu_vals)
 ref_sqrtml = np.sqrt(ref_mulog)
 C_iii_log  = np.exp(np.mean(np.log(sto_EmaxSq) - np.log(ref_mulog)))
@@ -156,7 +153,7 @@ kw_data = dict(marker='o', linewidth=2.0, markersize=7,
 kw_ref  = dict(linestyle='--', linewidth=2.0, color=COLORS[1], alpha=0.85, zorder=4)
 kw_ref2 = dict(linestyle=':',  linewidth=2.0, color=COLORS[2], alpha=0.85, zorder=3)
 
-# ─── (i) σ=0, max |eₜ| = O(μ)
+# ─── (i)max |et| = O(u)
 ax = fig.add_subplot(gs[0, 0])
 ax.loglog(mu_vals, det_max, **kw_data)
 ref1, _ = best_fit_line(mu_fine, 1.0,
@@ -169,7 +166,7 @@ ax.set_title('(i) Deterministic ($\\sigma=0$)\n'
              '$\\max_{{[0,T]}}|e_t| = O(\\mu)$', fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (ii) max_t 𝔼[|eₜ|] = O(√μ)
+# ─── (ii) max_t E[|et|] = O(sqrt{u})
 ax = fig.add_subplot(gs[0, 1])
 ax.loglog(mu_vals, sto_maxEmn, **kw_data)
 ax.loglog(mu_fine, C_ii * np.sqrt(mu_fine), **kw_ref,
@@ -181,7 +178,7 @@ ax.set_title('(ii) Stochastic (pointwise)\n'
              fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (iii) 𝔼[max_t |eₜ|²] = O(μ log(1/μ))
+# ─── (iii) E[max_t |et|^2] = O(u log(1/u))
 ax = fig.add_subplot(gs[0, 2])
 ax.loglog(mu_vals, sto_EmaxSq, **kw_data)
 ax.loglog(mu_fine, C_iii_log * mu_fine * np.log(1/mu_fine), **kw_ref,
@@ -210,7 +207,7 @@ ax.set_title(f'(iv) Markov Inequality Check ($\\varepsilon={eps}$)\n'
              fontsize=11, fontweight='bold')
 ax.legend(fontsize=9); ax.grid(True, which='both', alpha=0.25)
 
-# ─── (v) 𝔼[max_t |eₜ|] = O(√(μ log(1/μ)))
+# ─── (v) 𝔼[max_t |et|] = O( sqrt(u log(1/u)) 
 ax = fig.add_subplot(gs[1, 1])
 ax.loglog(mu_vals, sto_Emax, **kw_data)
 ax.loglog(mu_fine, C_v_log * np.sqrt(mu_fine * np.log(1/mu_fine)), **kw_ref,
